@@ -683,3 +683,47 @@ body{
   }
 
 }
+.auth-container{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#111;
+}
+
+.auth-card{
+  width:400px;
+  background:#1a1a1a;
+  padding:40px;
+  border-radius:20px;
+}
+
+.auth-card h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.auth-card input{
+  width:100%;
+  padding:15px;
+  margin-bottom:15px;
+  border:none;
+  border-radius:10px;
+  background:#222;
+  color:white;
+}
+
+.auth-card button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  background:#ff6b00;
+  color:white;
+  cursor:pointer;
+}
+
+.auth-card p{
+  text-align:center;
+  margin-top:20px;
+}
