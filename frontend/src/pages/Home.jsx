@@ -1,8 +1,161 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 export default function Home() {
+  const token = localStorage.getItem("token");
   const [height, setHeight] = useState('');
 const [weight, setWeight] = useState('');
+const [plans, setPlans] = useState([]);
+useEffect(() => {
+  fetchPlans();
+}, []);
+const handleBuyMembership =
+  async (membershipId) => {
+
+    try {
+
+      const token =
+        localStorage.getItem(
+          "token"
+        );
+
+      if (!token) {
+
+        window.location.href =
+          "/login";
+
+        return;
+      }
+
+      const response =
+        await axios.get(
+          `http://localhost:8000/api/user-memberships/payment-order/${membershipId}`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      const {
+        order,
+        key,
+      } = response.data;
+
+      const options = {
+        key,
+
+        amount:
+          order.amount,
+
+        currency:
+          order.currency,
+
+        name:
+          "Iron House",
+
+        description:
+          "Gym Membership",
+
+        order_id:
+          order.id,
+
+handler: async function (
+
+    response
+
+  ) {
+
+    try {
+
+      await axios.post(
+
+        "http://localhost:8000/api/user-memberships/verify-payment",
+
+        {
+
+          razorpay_order_id:
+
+            response.razorpay_order_id,
+
+          razorpay_payment_id:
+
+            response.razorpay_payment_id,
+
+          razorpay_signature:
+
+            response.razorpay_signature,
+
+          membershipId,
+
+        },
+
+        {
+
+          headers: {
+
+            Authorization:
+
+              `Bearer ${token}`,
+
+          },
+
+        }
+
+      );
+
+      alert(
+
+        "Membership Activated Successfully"
+
+      );
+
+    } catch (error) {
+
+      alert(
+
+        "Verification Failed"
+
+      );
+
+    }
+
+  },
+
+};
+const razorpay =
+  new window.Razorpay(options);
+
+razorpay.open();
+
+} catch (error) {
+
+  console.log(error);
+
+  alert(
+    error.response?.data?.message ||
+    "Payment Failed"
+  );
+
+}
+};
+
+
+
+  
+const fetchPlans = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8000/api/memberships"
+    );
+
+    setPlans(response.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
  const calculateBMI = () => {
   if (!height || !weight) {
     return {
@@ -64,18 +217,48 @@ const bmiData = calculateBMI();
     <li><a href="#testimonials">Results</a></li>
 
   </ul>
+<div className="nav-right">
 
- <div className="nav-right">
+  {token && (
 
-  <a href="/login" className="nav-auth">
-    Login
-  </a>
+    <a
+      href="/dashboard"
+      className="nav-auth"
+    >
+      Dashboard
+    </a>
 
-  <a href="/register" className="signup-btn">
-    Sign Up
-  </a>
+  )}
+  {token ? (
+    <>
+      <a href="/book-trial" className="nav-auth">
+        Book Trial
+      </a>
+
+      <button
+        className="logout-btn"
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }}
+      >
+        Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <a href="/login" className="nav-auth">
+        Login
+      </a>
+
+      <a href="/register" className="signup-btn">
+        Sign Up
+      </a>
+    </>
+  )}
 
 </div>
+
 </nav>
 
       <section className="hero" id="home">
@@ -126,22 +309,21 @@ const bmiData = calculateBMI();
 
 </p>
 
-    <a href="/login">
+<div className="hero-buttons">
 
- <div className="hero-buttons">
-
-  <a href="/login">
+  <a
+    href={
+      token
+        ? "/book-trial"
+        : "/login?redirect=book-trial"
+    }
+  >
     <button className="primary-btn">
-      Book Free Trial
+      Book Your Free Trial
     </button>
   </a>
 
 </div>
-
-
-
-
-    </a>
 
   </div>
 
@@ -287,54 +469,44 @@ const bmiData = calculateBMI();
     <p>Choose the plan that fits your fitness journey.</p>
   </div>
 
-  <div className="pricing-cards">
+ <div className="pricing-cards">
 
-    <div className="price-card">
-      <h3>Basic</h3>
-      <h1>₹999</h1>
-      <p>/month</p>
+  {plans.map((plan) => (
 
-      <ul>
-        <li>✔ Gym Access</li>
-        <li>✔ Locker Access</li>
-        <li>✔ Basic Support</li>
-      </ul>
+    <div
+      key={plan._id}
+      className="price-card"
+    >
 
-      <button>Join Now</button>
-    </div>
+      <h3>{plan.name}</h3>
 
-    <div className="price-card featured">
-      <h3>Premium</h3>
-      <h1>₹1999</h1>
-      <p>/month</p>
+      <h1>₹{plan.price}</h1>
+
+      <p>{plan.duration}</p>
 
       <ul>
-        <li>✔ Everything in Basic</li>
-        <li>✔ Group Classes</li>
-        <li>✔ Nutrition Guide</li>
-        <li>✔ Cardio Zone</li>
+
+        <li>
+          {plan.description}
+        </li>
+
       </ul>
 
-      <button>Most Popular</button>
+      <button
+  onClick={() =>
+    handleBuyMembership(
+      plan._id
+    )
+  }
+>
+  Join Now
+</button>
+
     </div>
 
-    <div className="price-card">
-      <h3>Elite</h3>
-      <h1>₹3499</h1>
-      <p>/month</p>
+  ))}
 
-      <ul>
-        <li>✔ Personal Trainer</li>
-        <li>✔ Diet Plan</li>
-        <li>✔ Priority Support</li>
-        <li>✔ Full Gym Access</li>
-      </ul>
-
-      <button>Join Now</button>
-    </div>
-
-  </div>
-
+</div>
 </section>
 
 <section className="bmi-section">
