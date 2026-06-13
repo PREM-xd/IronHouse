@@ -1,14 +1,40 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React,
+{
+  useState,
+  useEffect,
+  useRef
+} from "react";import axios from "axios";
 export default function Home() {
   const token = localStorage.getItem("token");
   const [height, setHeight] = useState('');
 const [weight, setWeight] = useState('');
 const [plans, setPlans] = useState([]);
+const messagesEndRef =
+  useRef(null);
+
+const [chatLoading,
+  setChatLoading] =
+  useState(false);
 useEffect(() => {
   fetchPlans();
 }, []);
+const [chatMessages, setChatMessages] =
+  useState([
+    {
+      role: "assistant",
+      content:
+        "Hello! I'm IronHouse Coach AI. Ask me anything about workouts, nutrition, fat loss, muscle gain, supplements, or recovery."
+    }
+  ]);
+useEffect(() => {
 
+  messagesEndRef
+    .current
+    ?.scrollIntoView({
+      behavior: "smooth"
+    });
+
+}, [chatMessages]);
 const [age, setAge] = useState("");
 const [gender, setGender] = useState("");
 const [experience, setExperience] = useState("");
@@ -16,12 +42,16 @@ const [bench, setBench] = useState("");
 const [squat, setSquat] = useState("");
 const [deadlift, setDeadlift] = useState("");
 const [goal, setGoal] = useState("");
-
 const [aiPlan, setAiPlan] =
-  useState("");
+  useState(null);
 
 const [loading, setLoading] =
   useState(false);
+const [chatOpen, setChatOpen] =
+  useState(false);
+
+const [question, setQuestion] =
+  useState("");
 
 
 
@@ -173,46 +203,6 @@ const fetchPlans = async () => {
   }
 };
 
- const calculateBMI = () => {
-  if (!height || !weight) {
-    return {
-      bmi: "--",
-      category: "Enter your details",
-      advice: "Fill in your height and weight."
-    };
-  }
-
-  const h = height / 100;
-  const bmi = (weight / (h * h)).toFixed(1);
-
-  let category = "";
-  let advice = "";
-
-  if (Number(bmi) < 18.5) {
-    category = "Underweight";
-    advice =
-      "Focus on eating more calories, increasing protein intake, and following a structured strength-training program.";
-  } else if (Number(bmi)  < 25) {
-    category = "Normal Weight";
-    advice =
-      "Excellent! Maintain your current lifestyle with regular exercise and a balanced diet.";
-  } else if (Number(bmi)  < 30) {
-    category = "Overweight";
-    advice =
-      "Consider increasing daily activity, improving food quality, and creating a moderate calorie deficit.";
-  } else {
-    category = "Obese";
-    advice =
-      "Focus on gradual fat loss through proper nutrition, regular exercise, and healthy habits.";
-  }
-
-  return {
-    bmi,
-    category,
-    advice
-  };
-};
-const bmiData = calculateBMI();
  
 const generateFitnessPlan =
   async () => {
@@ -237,10 +227,17 @@ const generateFitnessPlan =
           }
         );
 
-      setAiPlan(
-        response.data.plan
-      );
+    const cleanResponse =
+  response.data.plan
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
 
+setAiPlan(
+  JSON.parse(
+    cleanResponse
+  )
+);
     } catch (error) {
 
       alert(
@@ -254,7 +251,52 @@ const generateFitnessPlan =
     }
 };
 
+const askCoachAI = async () => {
 
+  if (!question) return;
+
+  const userMessage = {
+    role: "user",
+    content: question,
+  };
+
+  setChatMessages(prev => [
+    ...prev,
+    userMessage,
+  ]);
+
+  setQuestion("");
+  setChatLoading(true);
+
+  try {
+
+    const response =
+      await axios.post(
+        "http://localhost:8000/api/chat/ask",
+        {
+          question,
+        }
+      );
+
+    setChatMessages(prev => [
+      ...prev,
+      {
+        role: "assistant",
+        content: response.data.answer,
+      },
+    ]);
+
+  } catch (error) {
+
+    console.log(error);
+
+  } finally {
+
+    setChatLoading(false);
+
+  }
+
+};
 return (
     <>
      <nav className="navbar">
@@ -723,28 +765,70 @@ return (
       }
     </button>
 
-    {aiPlan && (
 
-      <div
-        style={{
-          marginTop: "30px",
-          textAlign: "left",
-          whiteSpace:
-            "pre-wrap",
-        }}
-      >
+{aiPlan && (
 
-        <h3>
-          Your AI Plan
-        </h3>
+<>
+  <div className="ai-results">
 
-        <p>
-          {aiPlan}
-        </p>
+  <div className="ai-card">
+    <h3>Fitness Score</h3>
+    <p>{aiPlan.fitnessScore}</p>
+  </div>
 
-      </div>
+  <div className="ai-card">
+    <h3>Maintenance</h3>
+    <p>{aiPlan.maintenanceCalories}</p>
+  </div>
 
-    )}
+  <div className="ai-card">
+    <h3>Target Calories</h3>
+    <p>{aiPlan.recommendedCalories}</p>
+  </div>
+
+  <div className="ai-card">
+    <h3>Protein</h3>
+    <p>{aiPlan.protein}</p>
+  </div>
+
+    <div className="ai-card">
+      <h3>Carbs</h3>
+      <p>{aiPlan.carbs}</p>
+    </div>
+
+    <div className="ai-card">
+      <h3>Fats</h3>
+      <p>{aiPlan.fats}</p>
+    </div>
+
+    <div className="ai-card">
+      <h3>Workout Split</h3>
+      <p>{aiPlan.workoutSplit}</p>
+    </div>
+
+    <div className="ai-card">
+      <h3>Cardio</h3>
+      <p>{aiPlan.cardio}</p>
+    </div>
+
+  </div>
+
+  <div className="ai-advice-card">
+    <h3>
+  AI Coach Advice
+</h3>
+
+<span className="goal-badge">
+  {goal}
+</span>
+    <p>{aiPlan.advice}</p>
+  </div>
+
+</>
+
+)}
+
+
 
   </div>
 
@@ -821,7 +905,98 @@ return (
   </div>
 </footer>
      
-     
+     <div
+  className="chat-bubble"
+  onClick={() =>
+    setChatOpen(
+      !chatOpen
+    )
+  }
+>
+  💬
+</div>
+
+{chatOpen && (
+
+<div
+  className="chat-window"
+>
+
+  <div
+    className="chat-header"
+  >
+    IronHouse Coach AI
+  </div>
+
+<div className="chat-messages">
+
+  {chatMessages.map(
+    (msg, index) => (
+
+      <div
+        key={index}
+        className={
+          msg.role === "user"
+            ? "user-msg"
+            : "bot-msg"
+        }
+      >
+        {msg.content}
+      </div>
+
+    )
+  )}
+
+  {chatLoading && (
+    <div className="bot-msg">
+      Thinking...
+    </div>
+  )}
+
+  <div ref={messagesEndRef}></div>
+
+</div>
+
+<div className="chat-input">
+
+  <input
+    type="text"
+    placeholder="Ask a question..."
+    value={question}
+    onChange={(e) =>
+      setQuestion(
+        e.target.value
+      )
+    }
+    onKeyDown={(e) => {
+
+      if (
+        e.key === "Enter"
+      ) {
+
+        askCoachAI();
+
+      }
+
+    }}
+  />
+
+  <button
+    onClick={askCoachAI}
+    disabled={chatLoading}
+  >
+    {
+      chatLoading
+        ? "..."
+        : "Send"
+    }
+  </button>
+
+</div>
+
+</div>
+
+)}
     </>
   );
 }

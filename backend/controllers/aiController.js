@@ -28,24 +28,31 @@ Height: ${height} cm
 Weight: ${weight} kg
 Training Experience: ${experience}
 
-Bench Press: ${bench}
-Squat: ${squat}
-Deadlift: ${deadlift}
+Bench Press: ${bench} kg
+Squat: ${squat} kg 
+Deadlift: ${deadlift} kg
 
 Goal: ${goal}
+Return ONLY valid JSON:
 
-Generate:
+{
+  "fitnessScore":"",
+  "maintenanceCalories":"",
+  "recommendedCalories":"",
+  "protein":"",
+  "carbs":"",
+  "fats":"",
+  "workoutSplit":"",
+  "cardio":"",
+  "advice":""
+}
 
-1. Maintenance Calories
-2. Recommended Calories
-3. Protein
-4. Carbs
-5. Fats
-6. Workout Split
-7. Cardio Recommendation
-8. Personalized Advice
+fitnessScore should be in format:
+"78/100"
 
-Keep response clean and easy to read.
+Do not include markdown.
+Do not include markdown code blocks.
+Do not include any text outside the JSON object.
 `;
 
       const completion =
@@ -64,9 +71,9 @@ Keep response clean and easy to read.
           }
         );
 
-      const plan =
-        completion.choices[0]
-          .message.content;
+     const plan =
+  completion.choices[0]
+    .message.content.trim();
 
       res.status(200).json({
         plan,

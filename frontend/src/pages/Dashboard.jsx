@@ -204,10 +204,66 @@ console.log(bookings);
   return (
 
     <div className="dashboard-container">
+<div className="hero-dashboard">
 
-      <h1>
-        My Trial Bookings
-      </h1>
+  <div className="hero-card">
+    <h3>🔥 Fitness Score</h3>
+    <h1>82</h1>
+  </div>
+
+  <div className="hero-card">
+    <h3>🎯 Goal</h3>
+    <h1>Fat Loss</h1>
+  </div>
+
+  <div className="hero-card">
+    <h3>📅 Days Left</h3>
+    <h1>{getDaysRemaining()}</h1>
+  </div>
+
+  <div className="hero-card">
+    <h3>💳 Membership</h3>
+    <h1>
+      {membership?.membership?.name}
+    </h1>
+  </div>
+<div className="pr-section">
+
+<h2>🏆 Personal Records</h2>
+
+<div className="hero-dashboard">
+
+<div className="hero-card">
+<h3>Bench PR</h3>
+<h1>85kg</h1>
+</div>
+
+<div className="hero-card">
+<h3>Squat PR</h3>
+<h1>120kg</h1>
+</div>
+
+<div className="hero-card">
+<h3>Deadlift PR</h3>
+<h1>180kg</h1>
+</div>
+
+<div className="hero-card">
+<h3>Total</h3>
+<h1>385kg</h1>
+</div>
+
+</div>
+
+</div>
+</div>
+     <h1>
+Welcome Back 💪
+</h1>
+
+<p>
+Track your progress and dominate your goals.
+</p>
 
       <div className="dashboard-grid">
 

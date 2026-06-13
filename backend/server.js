@@ -42,6 +42,15 @@ const aiRoutes =
   "/api/ai",
   aiRoutes
 );
+const chatRoutes =
+  require(
+    "./routes/chatRoutes"
+  );
+  app.use(
+  "/api/chat",
+  chatRoutes
+);
+
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
