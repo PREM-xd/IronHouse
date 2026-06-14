@@ -3,7 +3,7 @@ const crypto =
 const razorpay =
   require("../config/razorpay");
 const UserMembership =
-  require("../models/userMembership");
+  require("../models/UserMembership");
 
 const Membership =
   require("../models/Membership");
