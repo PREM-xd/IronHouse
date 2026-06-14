@@ -8,7 +8,7 @@ const UserMembership =
 const Membership =
   require("../models/Membership");
 const User =
-  require("../models/user");
+  require("../models/User");
 
 const transporter =
   require("../config/email");
