@@ -116,8 +116,7 @@ handler: async function (
     try {
 
       await axios.post(
-
-        "${import.meta.env.VITE_API_URL}/api/user-memberships/verify-payment",
+  `${import.meta.env.VITE_API_URL}/api/user-memberships/verify-payment`,
 
         {
 
@@ -193,13 +192,20 @@ razorpay.open();
 const fetchPlans = async () => {
   try {
     const response = await axios.get(
-      "${import.meta.env.VITE_API_URL}/api/memberships"
+      `${import.meta.env.VITE_API_URL}/api/memberships`
     );
 
-    setPlans(response.data);
+    console.log("API URL:", import.meta.env.VITE_API_URL);
+    console.log("Response:", response.data);
+
+    setPlans(
+      Array.isArray(response.data)
+        ? response.data
+        : []
+    );
 
   } catch (error) {
-    console.log(error);
+    console.log("Membership Error:", error);
   }
 };
 
@@ -213,7 +219,7 @@ const generateFitnessPlan =
 
       const response =
         await axios.post(
-          "${import.meta.env.VITE_API_URL}/api/ai/fitness-plan",
+          `${import.meta.env.VITE_API_URL}/api/ai/fitness-plan`,
           {
             age,
             gender,
@@ -272,7 +278,7 @@ const askCoachAI = async () => {
 
     const response =
       await axios.post(
-        "${import.meta.env.VITE_API_URL}/api/chat/ask",
+        `${import.meta.env.VITE_API_URL}/api/chat/ask`,
         {
           question,
         }
