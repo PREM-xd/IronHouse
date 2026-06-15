@@ -62,7 +62,7 @@ useEffect(() => {
  const fetchBookings = async () => {
   try {
     const response = await axios.get(
-      "${import.meta.env.VITE_API_URL}/api/bookings",
+      `${import.meta.env.VITE_API_URL}/api/bookings`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
@@ -91,7 +91,7 @@ const fetchPlans = async () => {
   try {
 
     const response = await axios.get(
-      "${import.meta.env.VITE_API_URL}/api/memberships"
+     `${import.meta.env.VITE_API_URL}/api/memberships`,
     );
 
     setPlans(response.data);
@@ -107,7 +107,7 @@ const fetchRevenueStats =
 
       const response =
         await axios.get(
-          "${import.meta.env.VITE_API_URL}/api/user-memberships/revenue",
+          `${import.meta.env.VITE_API_URL}/api/user-memberships/revenue`,
           {
             headers: {
               Authorization:
@@ -172,7 +172,7 @@ const handleAddPlan = async () => {
 } else {
 
   await axios.post(
-    "${import.meta.env.VITE_API_URL}/api/memberships",
+    `${import.meta.env.VITE_API_URL}/api/memberships`,
     {
       name: planName,
       price: planPrice,
