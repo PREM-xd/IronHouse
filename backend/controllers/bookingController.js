@@ -22,7 +22,8 @@ const createBooking = async (req, res) => {
 });
 try {
   const user = await User.findById(req.user.id);
-
+// console.log("EMAIL_USER:", process.env.EMAIL_USER);
+// console.log("EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: process.env.EMAIL_USER,
@@ -46,9 +47,15 @@ try {
       <p>Your free trial has been booked successfully.</p>
     `,
   });
-
 } catch (emailError) {
-  console.error("Email Error:", emailError);
+  console.error("========== EMAIL ERROR ==========");
+  console.error(emailError);
+  console.error("Message:", emailError.message);
+  console.error("EMAIL_USER:", process.env.EMAIL_USER);
+  console.error(
+    "EMAIL_PASS EXISTS:",
+    !!process.env.EMAIL_PASS
+  );
 }
 
   } catch (error) {
