@@ -16,82 +16,40 @@ const createBooking = async (req, res) => {
       goal,
       date,
     });
-//     await transporter.sendMail({
-//   from: process.env.EMAIL_USER,
-
-//   to: process.env.EMAIL_USER,
-
-//   subject: "🔥 New Trial Booking Received",
-
-//   html: `
-//     <h2>New Trial Booking</h2>
-
-//     <p><strong>Name:</strong> ${booking.name}</p>
-
-//     <p><strong>Phone:</strong> ${booking.phone}</p>
-
-//     <p><strong>Goal:</strong> ${booking.goal}</p>
-
-//     <p><strong>Date:</strong> ${booking.date}</p>
-
-//     <hr>
-
-//     <p>IronHouse Gym Admin Notification</p>
-//   `,
-// });
-const user =
-  await User.findById(
-    req.user.id
-  );
-
-// await transporter.sendMail({
-//   from:
-//     process.env.EMAIL_USER,
-
-//   to:
-//     user.email,
-
-//   subject:
-//     "Iron House Trial Booking Confirmed",
-
-//   html: `
-//     <h2>
-//       Iron House Gym
-//     </h2>
-
-//     <p>
-//       Hello ${user.name},
-//     </p>
-
-//     <p>
-//       Your free trial has been booked successfully.
-//     </p>
-
-//     <p>
-//       <strong>Goal:</strong>
-//       ${goal}
-//     </p>
-
-//     <p>
-//       <strong>Date:</strong>
-//       ${date}
-//     </p>
-
-//     <p>
-//       We look forward to seeing you at Iron House Gym.
-//     </p>
-
-//     <br>
-
-//     <p>
-//       Team Iron House
-//     </p>
-//   `,
-// });
     res.status(201).json({
-      message: "Trial Booked Successfully",
-      booking,
-    });
+  message: "Trial Booked Successfully",
+  booking,
+});
+try {
+  const user = await User.findById(req.user.id);
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
+    subject: "🔥 New Trial Booking Received",
+    html: `
+      <h2>New Trial Booking</h2>
+      <p><strong>Name:</strong> ${booking.name}</p>
+      <p><strong>Phone:</strong> ${booking.phone}</p>
+      <p><strong>Goal:</strong> ${booking.goal}</p>
+      <p><strong>Date:</strong> ${booking.date}</p>
+    `,
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Iron House Trial Booking Confirmed",
+    html: `
+      <h2>Iron House Gym</h2>
+      <p>Hello ${user.name}</p>
+      <p>Your free trial has been booked successfully.</p>
+    `,
+  });
+
+} catch (emailError) {
+  console.error("Email Error:", emailError);
+}
 
   } catch (error) {
     res.status(500).json({
