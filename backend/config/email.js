@@ -1,3 +1,4 @@
+console.log("EMAIL CONFIG LOADED");
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
