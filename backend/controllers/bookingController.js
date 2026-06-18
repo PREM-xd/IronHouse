@@ -3,7 +3,7 @@ const Booking = require("../models/Booking");
 const User =
   require("../models/User");
 
-const apiInstance = require("../config/email");
+const sendEmail = require("../utils/sendEmail");
 const createBooking = async (req, res) => {
   try {
     const { name, phone, goal, date } = req.body;
@@ -25,46 +25,30 @@ const createBooking = async (req, res) => {
       const user = await User.findById(req.user.id);
 
       // Admin email
-      await apiInstance.sendTransacEmail({
-        sender: {
-          email: "ironhouse79@gmail.com",
-          name: "Iron House Gym",
-        },
-        to: [
-          {
-            email: "ironhouse79@gmail.com",
-          },
-        ],
-        subject: "🔥 New Trial Booking Received",
-        htmlContent: `
-          <h2>New Trial Booking</h2>
-          <p>Name: ${booking.name}</p>
-          <p>Phone: ${booking.phone}</p>
-          <p>Goal: ${booking.goal}</p>
-          <p>Date: ${booking.date}</p>
-        `,
-      });
+     await sendEmail(
+  "ironhouse79@gmail.com",
+  "🔥 New Trial Booking Received",
+  `
+  <h2>New Trial Booking</h2>
+  <p>Name: ${booking.name}</p>
+  <p>Phone: ${booking.phone}</p>
+  <p>Goal: ${booking.goal}</p>
+  <p>Date: ${booking.date}</p>
+  `
+);
 
       // User email
-      await apiInstance.sendTransacEmail({
-        sender: {
-          email: "ironhouse79@gmail.com",
-          name: "Iron House Gym",
-        },
-        to: [
-          {
-            email: user.email,
-          },
-        ],
-        subject: "Iron House Trial Booking Confirmed",
-        htmlContent: `
-          <h2>Iron House Gym</h2>
-          <p>Hello ${user.name}</p>
-          <p>Your free trial has been booked successfully.</p>
-          <p>Goal: ${goal}</p>
-          <p>Date: ${date}</p>
-        `,
-      });
+   await sendEmail(
+  user.email,
+  "Iron House Trial Booking Confirmed",
+  `
+  <h2>Iron House Gym</h2>
+  <p>Hello ${user.name}</p>
+  <p>Your free trial has been booked successfully.</p>
+  <p>Goal: ${goal}</p>
+  <p>Date: ${date}</p>
+  `
+);
 
     } catch (emailError) {
       console.error("EMAIL ERROR:", emailError);
