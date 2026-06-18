@@ -10,8 +10,7 @@ const Membership =
 const User =
   require("../models/User");
 
-const transporter =
-  require("../config/email");
+
 const buyMembership = async (
   req,
   res
