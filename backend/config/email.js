@@ -1,6 +1,5 @@
 const brevo = require("@getbrevo/brevo");
 
-console.log("BREVO OBJECT KEYS:");
-console.log(Object.keys(brevo));
+console.log("Brevo =", brevo);
 
 module.exports = {};
