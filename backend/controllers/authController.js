@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-
+const sendEmail = require("../utils/sendEmail");
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -112,37 +112,23 @@ const forgotPassword =
 
       await user.save();
 
-      const resetUrl =
-        `http://localhost:5173/reset-password/${resetToken}`;
+   const resetUrl =
+  `https://iron-house-eta.vercel.app/reset-password/${resetToken}`;
 
-      await transporter.sendMail({
-        from:
-          process.env.EMAIL_USER,
+await sendEmail(
+  user.email,
+  "Reset Your Password",
+  `
+    <h2>Password Reset</h2>
+    <p>Click the link below to reset your password:</p>
 
-        to:
-          user.email,
+    <a href="${resetUrl}">
+      Reset Password
+    </a>
 
-        subject:
-          "Reset Your Password",
-
-        html: `
-          <h2>
-            Password Reset
-          </h2>
-
-          <p>
-            Click the link below to reset your password:
-          </p>
-
-          <a href="${resetUrl}">
-            Reset Password
-          </a>
-
-          <p>
-            This link expires in 15 minutes.
-          </p>
-        `,
-      });
+    <p>This link expires in 15 minutes.</p>
+  `
+);
 
       res.status(200).json({
         message:

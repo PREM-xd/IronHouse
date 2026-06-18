@@ -9,7 +9,7 @@ const Membership =
   require("../models/Membership");
 const User =
   require("../models/User");
-
+const sendEmail = require("../utils/sendEmail");
 
 const buyMembership = async (
   req,
@@ -244,99 +244,27 @@ const user =
     req.user.id
   );
 
-await transporter.sendMail({
-  from:
-    process.env.EMAIL_USER,
+await sendEmail(
+  user.email,
+  "Membership Purchased Successfully",
+  `
+    <h2>Iron House Gym</h2>
 
-  to:
-    user.email,
+    <p>Hello ${user.name},</p>
 
-  subject:
-    "Membership Activated Successfully",
+    <p>Your membership has been activated successfully.</p>
 
-  html: `
-    <h2>
-      Iron House Gym
-    </h2>
+    <p><strong>Plan:</strong> ${membership.name}</p>
 
-    <p>
-      Hello ${user.name},
-    </p>
+    <p><strong>Amount Paid:</strong> ₹${membership.price}</p>
 
-    <p>
-      Your membership has been activated successfully.
-    </p>
-
-    <hr>
-
-    <p>
-      <strong>Plan:</strong>
-      ${membership.name}
-    </p>
-
-    <p>
-      <strong>Amount:</strong>
-      ₹${membership.price}
-    </p>
-
-    <p>
-      <strong>Expiry:</strong>
-      ${expiryDate.toLocaleDateString()}
-    </p>
-
-    <p>
-      Payment ID:
-      ${razorpay_payment_id}
-    </p>
+    <p><strong>Valid Until:</strong> ${expiryDate.toDateString()}</p>
 
     <br>
 
-    <p>
-      Team Iron House
-    </p>
-  `,
-});
-await transporter.sendMail({
-  from:
-    process.env.EMAIL_USER,
-
-  to:
-    process.env.EMAIL_USER,
-
-  subject:
-    "💰 New Membership Sold",
-
-  html: `
-    <h2>
-      New Membership Sale
-    </h2>
-
-    <p>
-      <strong>User:</strong>
-      ${user.name}
-    </p>
-
-    <p>
-      <strong>Email:</strong>
-      ${user.email}
-    </p>
-
-    <p>
-      <strong>Plan:</strong>
-      ${membership.name}
-    </p>
-
-    <p>
-      <strong>Amount:</strong>
-      ₹${membership.price}
-    </p>
-
-    <p>
-      <strong>Payment ID:</strong>
-      ${razorpay_payment_id}
-    </p>
-  `,
-});
+    <p>Thank you for choosing Iron House Gym.</p>
+  `
+);
     res.status(200).json({
       success: true,
       purchase,
