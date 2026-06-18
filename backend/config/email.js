@@ -1,10 +1,6 @@
 const brevo = require("@getbrevo/brevo");
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+console.log("BREVO OBJECT KEYS:");
+console.log(Object.keys(brevo));
 
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
-
-module.exports = apiInstance;
+module.exports = {};
