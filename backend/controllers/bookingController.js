@@ -3,60 +3,72 @@ const Booking = require("../models/Booking");
 const User =
   require("../models/User");
 
-const transporter =
-  require("../config/email");
+const apiInstance = require("../config/email");
 const createBooking = async (req, res) => {
   try {
     const { name, phone, goal, date } = req.body;
 
     const booking = await Booking.create({
-        user: req.user.id,
+      user: req.user.id,
       name,
       phone,
       goal,
       date,
     });
-    res.status(201).json({
-  message: "Trial Booked Successfully",
-  booking,
-});
-try {
-  const user = await User.findById(req.user.id);
-// console.log("EMAIL_USER:", process.env.EMAIL_USER);
-// console.log("EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    subject: "🔥 New Trial Booking Received",
-    html: `
-      <h2>New Trial Booking</h2>
-      <p><strong>Name:</strong> ${booking.name}</p>
-      <p><strong>Phone:</strong> ${booking.phone}</p>
-      <p><strong>Goal:</strong> ${booking.goal}</p>
-      <p><strong>Date:</strong> ${booking.date}</p>
-    `,
-  });
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: "Iron House Trial Booking Confirmed",
-    html: `
-      <h2>Iron House Gym</h2>
-      <p>Hello ${user.name}</p>
-      <p>Your free trial has been booked successfully.</p>
-    `,
-  });
-} catch (emailError) {
-  console.error("========== EMAIL ERROR ==========");
-  console.error(emailError);
-  console.error("Message:", emailError.message);
-  console.error("EMAIL_USER:", process.env.EMAIL_USER);
-  console.error(
-    "EMAIL_PASS EXISTS:",
-    !!process.env.EMAIL_PASS
-  );
-}
+    res.status(201).json({
+      message: "Trial Booked Successfully",
+      booking,
+    });
+
+    try {
+      const user = await User.findById(req.user.id);
+
+      // Admin email
+      await apiInstance.sendTransacEmail({
+        sender: {
+          email: "ironhouse79@gmail.com",
+          name: "Iron House Gym",
+        },
+        to: [
+          {
+            email: "ironhouse79@gmail.com",
+          },
+        ],
+        subject: "🔥 New Trial Booking Received",
+        htmlContent: `
+          <h2>New Trial Booking</h2>
+          <p>Name: ${booking.name}</p>
+          <p>Phone: ${booking.phone}</p>
+          <p>Goal: ${booking.goal}</p>
+          <p>Date: ${booking.date}</p>
+        `,
+      });
+
+      // User email
+      await apiInstance.sendTransacEmail({
+        sender: {
+          email: "ironhouse79@gmail.com",
+          name: "Iron House Gym",
+        },
+        to: [
+          {
+            email: user.email,
+          },
+        ],
+        subject: "Iron House Trial Booking Confirmed",
+        htmlContent: `
+          <h2>Iron House Gym</h2>
+          <p>Hello ${user.name}</p>
+          <p>Your free trial has been booked successfully.</p>
+          <p>Goal: ${goal}</p>
+          <p>Date: ${date}</p>
+        `,
+      });
+
+    } catch (emailError) {
+      console.error("EMAIL ERROR:", emailError);
+    }
 
   } catch (error) {
     res.status(500).json({
