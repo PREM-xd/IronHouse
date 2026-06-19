@@ -16,18 +16,26 @@ const requestNotificationPermission =
      console.log("Permission:", permission);
 
 if (permission === "granted") {
-console.log("Getting FCM token...");
-  const fcmToken =
-    await getToken(messaging, {
-      vapidKey:
-        "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
-    });
+ console.log("Getting FCM token...");
+
+const registration =
+  await navigator.serviceWorker.ready;
+
+console.log(
+  "SW Registration:",
+  registration
+);
+
+const fcmToken =
+  await getToken(messaging, {
+    vapidKey:
+      "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
+
+    serviceWorkerRegistration:
+      registration,
+  });
 
   console.log("FCM TOKEN:", fcmToken);
-
- 
-    
-  
 }
 
       
