@@ -12,30 +12,33 @@ const requestNotificationPermission =
       const permission =
         await Notification.requestPermission();
 
-      if (permission === "granted") {
-        const fcmToken =
-          await getToken(messaging, {
-            vapidKey:
-              "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
-          });
+     console.log("Permission:", permission);
 
-        console.log(
-          "FCM TOKEN:",
-          fcmToken
-        );
+if (permission === "granted") {
 
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/auth/save-fcm-token`,
-          {
-            fcmToken,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      }
+  const fcmToken =
+    await getToken(messaging, {
+      vapidKey:
+        "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
+    });
+
+  console.log("FCM TOKEN:", fcmToken);
+
+  await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/fcm/save-token`,
+    {
+      token: fcmToken,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
+      
+      
     } catch (error) {
       console.log(error);
     }
