@@ -8,9 +8,8 @@ const {
   "../controllers/fcmController"
 );
 
-const {
-  protect,
-} = require("../middleware/authMiddleware");
+const protect =
+  require("../middleware/authMiddleware");
 
 router.post(
   "/save-token",
