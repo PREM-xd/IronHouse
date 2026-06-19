@@ -1,10 +1,45 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { messaging } from "../firebase";
+import { getToken } from "firebase/messaging";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+const requestNotificationPermission =
+  async (token) => {
+    try {
+      const permission =
+        await Notification.requestPermission();
 
+      if (permission === "granted") {
+        const fcmToken =
+          await getToken(messaging, {
+            vapidKey:
+              "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
+          });
+
+        console.log(
+          "FCM TOKEN:",
+          fcmToken
+        );
+
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/auth/save-fcm-token`,
+          {
+            fcmToken,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleLogin = async () => {
     try {
       const response = await axios.post(
@@ -32,7 +67,9 @@ localStorage.setItem(
 );
 
 alert("Login Successful");
-
+await requestNotificationPermission(
+  response.data.token
+);
       const params = new URLSearchParams(
   window.location.search
 );

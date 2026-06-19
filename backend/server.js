@@ -74,7 +74,18 @@ app.use(
   userStatsRoutes
 );
 
-
+const notificationRoutes =
+  require("./routes/notificationRoutes");
+  app.use(
+  "/api/auth",
+  notificationRoutes
+);
+const fcmRoutes =
+  require("./routes/fcmRoutes");
+  app.use(
+  "/api/fcm",
+  fcmRoutes
+);
 
 const PORT = process.env.PORT || 8000;
 
