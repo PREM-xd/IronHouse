@@ -36,6 +36,21 @@ const fcmToken =
   });
 
   console.log("FCM TOKEN:", fcmToken);
+  await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/fcm/save-token`,
+  {
+    token: fcmToken,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+console.log(
+  "TOKEN SAVED TO DB"
+);
 }
 
       
