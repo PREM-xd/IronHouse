@@ -13,7 +13,7 @@ passport.use(
         process.env.GOOGLE_CLIENT_SECRET,
 
       callbackURL:
-        "/api/auth/google/callback",
+  "https://ironhouse-backend.onrender.com/api/auth/google/callback",
     },
 
     async (
