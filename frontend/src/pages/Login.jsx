@@ -33,10 +33,18 @@ console.log("Getting FCM token...");
       
       
     } catch (error) {
-  console.error(
-    "FCM ERROR:",
-    error
+  console.log(
+    "FCM ERROR MESSAGE:",
+    error.message
   );
+
+  console.log(
+    "FCM ERROR CODE:",
+    error.code
+  );
+
+  console.log(error);
+
 }
   };
   const handleLogin = async () => {
