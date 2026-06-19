@@ -86,7 +86,15 @@ const fcmRoutes =
   "/api/fcm",
   fcmRoutes
 );
+const testNotificationRoutes =
+  require(
+    "./routes/testNotificationRoutes"
+  );
 
+app.use(
+  "/api/notifications",
+  testNotificationRoutes
+);
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
