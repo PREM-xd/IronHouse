@@ -199,10 +199,29 @@ const resetPassword =
 
     }
 };
+const googleCallback =
+  async (req, res) => {
+
+    const token = jwt.sign(
+      {
+        id: req.user._id,
+        role: req.user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.redirect(
+      `https://iron-house-eta.vercel.app/google-success?token=${token}`
+    );
+};
 
 module.exports = {
   registerUser,
-   loginUser,
-     forgotPassword,
-       resetPassword,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  googleCallback,
 };
