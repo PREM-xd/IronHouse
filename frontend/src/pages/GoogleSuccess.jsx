@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { registerFCM } from "../utils/fcm";
 
 export default function GoogleSuccess() {
   useEffect(() => {
@@ -15,6 +16,8 @@ export default function GoogleSuccess() {
         "token",
         token
       );
+
+      registerFCM();
 
       window.location.href =
         "/";
