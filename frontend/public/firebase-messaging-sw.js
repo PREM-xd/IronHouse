@@ -1,13 +1,13 @@
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"
 );
 
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"
 );
 
 firebase.initializeApp({
-  apiKey: "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
+  apiKey: "AIzaSyC6Pi17TDWNbDnV6izf7VvWspl-ep2cts0",
   authDomain: "iron-house-260a9.firebaseapp.com",
   projectId: "iron-house-260a9",
   storageBucket: "iron-house-260a9.firebasestorage.app",
