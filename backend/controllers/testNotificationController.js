@@ -1,5 +1,8 @@
-const admin =
-  require("../config/firebaseAdmin");
+require("../config/firebaseAdmin");
+
+const {
+  getMessaging,
+} = require("firebase-admin/messaging");
 
 const User =
   require("../models/User");
@@ -7,6 +10,7 @@ const User =
 const sendTestNotification =
   async (req, res) => {
     try {
+
       const user =
         await User.findById(
           req.user.id
@@ -20,10 +24,10 @@ const sendTestNotification =
       }
 
       const response =
-        await admin
-          .messaging()
+        await getMessaging()
           .send({
-            token: user.fcmToken,
+            token:
+              user.fcmToken,
 
             notification: {
               title:
@@ -43,14 +47,16 @@ const sendTestNotification =
       });
 
     } catch (error) {
+
       console.log(error);
 
       res.status(500).json({
         message:
           error.message,
       });
+
     }
-  };
+};
 
 module.exports = {
   sendTestNotification,
