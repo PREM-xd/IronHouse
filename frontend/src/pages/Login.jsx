@@ -16,7 +16,7 @@ const requestNotificationPermission =
      console.log("Permission:", permission);
 
 if (permission === "granted") {
-
+console.log("Getting FCM token...");
   const fcmToken =
     await getToken(messaging, {
       vapidKey:
@@ -33,8 +33,11 @@ if (permission === "granted") {
       
       
     } catch (error) {
-      console.log(error);
-    }
+  console.error(
+    "FCM ERROR:",
+    error
+  );
+}
   };
   const handleLogin = async () => {
     try {
