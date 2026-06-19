@@ -52,7 +52,10 @@ if (redirect) {
       );
     }
   };
-
+const handleGoogleLogin = () => {
+  window.location.href =
+    `${import.meta.env.VITE_API_URL}/api/auth/google`;
+};
   return (
     <>
       <nav className="auth-navbar">
@@ -118,6 +121,18 @@ if (redirect) {
           >
             Login
           </button>
+<button
+  className="auth-btn"
+  onClick={handleGoogleLogin}
+  style={{
+    marginTop: "10px",
+    background: "#fff",
+    color: "#000",
+    border: "1px solid #ddd",
+  }}
+>
+  Continue with Google
+</button>
 
           <p className="auth-link">
             Don't have an account?

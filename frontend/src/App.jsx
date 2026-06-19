@@ -13,7 +13,8 @@ import ForgotPassword
   from "./pages/ForgotPassword";
   import ResetPassword
   from "./pages/ResetPassword";
-  
+import GoogleSuccess from "./pages/GoogleSuccess";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -41,6 +42,11 @@ export default function App() {
     <ResetPassword />
   }
 />
+<Route
+  path="/google-success"
+  element={<GoogleSuccess />}
+/>
+
       </Routes>
     </BrowserRouter>
   );

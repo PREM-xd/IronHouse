@@ -11,7 +11,24 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+const passport =
+  require("./config/passport");
 
+const session =
+  require("express-session");
+
+app.use(
+  session({
+    secret:
+      process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+
+app.use(passport.session());
 const authRoutes = require("./routes/authRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userMembershipRoutes =
