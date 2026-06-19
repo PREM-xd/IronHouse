@@ -1,15 +1,21 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "BAnccXVP1-YKC1ayZDobM6ex_gCVg-4GVEWK5bRRxx_1nAn05AZAgqFS2VjzLP3IVeShfr43LzO0LbWzXYqdN1o",
+  apiKey: "AIzaSyC6Pi17TDWNbDnV6izf7VvWspl-ep2cts0",
   authDomain: "iron-house-260a9.firebaseapp.com",
   projectId: "iron-house-260a9",
   storageBucket: "iron-house-260a9.firebasestorage.app",
   messagingSenderId: "372989663477",
   appId: "1:372989663477:web:4e67552a53367774b54dbc",
+  measurementId: "G-VE6CG81G4D"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-export const messaging = getMessaging(app);
+const analytics = getAnalytics(app);
