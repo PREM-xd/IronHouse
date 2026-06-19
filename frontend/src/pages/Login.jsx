@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 const requestNotificationPermission =
   async (token) => {
+        console.log("FCM function started");
     try {
       const permission =
         await Notification.requestPermission();
