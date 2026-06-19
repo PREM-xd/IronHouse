@@ -25,17 +25,9 @@ if (permission === "granted") {
 
   console.log("FCM TOKEN:", fcmToken);
 
-  await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/fcm/save-token`,
-    {
-      token: fcmToken,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+ 
+    
+  
 }
 
       
@@ -54,27 +46,32 @@ if (permission === "granted") {
         }
       );
 
-   localStorage.setItem(
-
-  "token",
-
-  response.data.token
-
+console.log(
+  "LOGIN RESPONSE:",
+  response.data
 );
 
 localStorage.setItem(
-
-  "role",
-
-  response.data.role
-
+  "token",
+  response.data.token
 );
 
-alert("Login Successful");
+localStorage.setItem(
+  "role",
+  response.data.role
+);
+
+console.log("BEFORE FCM");
+
 await requestNotificationPermission(
   response.data.token
 );
-      const params = new URLSearchParams(
+
+console.log("AFTER FCM");
+
+alert("Login Successful");
+
+const params = new URLSearchParams(
   window.location.search
 );
 
