@@ -12,6 +12,11 @@ require("../config/firebaseAdmin");
 
 const checkMembershipExpiry =
   async () => {
+
+    console.log(
+      "checkMembershipExpiry STARTED"
+    );
+
     try {
 
       const threeDaysLater =
@@ -53,9 +58,29 @@ const checkMembershipExpiry =
           },
           status: "Active",
         });
+console.log(
+  "MEMBERSHIPS FOUND:",
+  memberships.length
+);
 
+console.log(
+  "START:",
+  start
+);
+
+console.log(
+  "END:",
+  end
+);
+
+console.log(
+  memberships
+);
       for (const item of memberships) {
-
+console.log(
+  "PROCESSING:",
+  item._id
+);
         const user =
           await User.findById(
             item.user
