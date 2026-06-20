@@ -23,19 +23,30 @@ const sendTestNotification =
         });
       }
 
-      const response =
-        await getMessaging()
-          .send({
-            token:
-              user.fcmToken,
+    const response =
+  await getMessaging()
+    .send({
+      token:
+        user.fcmToken,
 
-            notification: {
-              title:
-                "Iron House",
-              body:
-                "Your push notification is working!",
-            },
-          });
+      notification: {
+        title:
+          "Iron House",
+        body:
+          "Your push notification is working!",
+      },
+
+      webpush: {
+        notification: {
+          title:
+            "Iron House",
+          body:
+            "Your push notification is working!",
+          icon:
+            "https://iron-house-eta.vercel.app/favicon.ico",
+        },
+      },
+    });
 
       console.log(
         "Notification sent:",
