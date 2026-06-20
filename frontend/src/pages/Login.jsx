@@ -1,39 +1,19 @@
 import React, {
   useState,
-  useEffect,
 } from "react";
+
 
 import axios from "axios";
 
 import { messaging } from "../firebase";
 
+
 import {
   getToken,
-  onMessage,
 } from "firebase/messaging";
 
 export default function Login() {
-  useEffect(() => {
-  const unsubscribe = onMessage(
-    messaging,
-    (payload) => {
-      console.log(
-        "FOREGROUND MESSAGE RECEIVED:",
-        payload
-      );
-
-      alert(
-        payload.notification?.title +
-        "\n" +
-        payload.notification?.body
-      );
-    }
-  );
-
-  return () => {
-    unsubscribe();
-  };
-}, []);
+ 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 const requestNotificationPermission =
