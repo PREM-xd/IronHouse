@@ -2,7 +2,13 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const cron =
+  require("node-cron");
 
+const checkMembershipExpiry =
+  require(
+    "./utils/checkMembershipExpiry"
+  );
 dotenv.config();
 
 connectDB();
@@ -95,8 +101,21 @@ app.use(
   "/api/notifications",
   testNotificationRoutes
 );
-const PORT = process.env.PORT || 8000;
 
+const PORT = process.env.PORT || 8000;
+cron.schedule(
+  "0 9 * * *",
+  async () => {
+
+    console.log(
+      "Checking expiring memberships..."
+    );
+
+    await checkMembershipExpiry();
+
+  }
+);
+checkMembershipExpiry();
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
