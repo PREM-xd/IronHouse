@@ -6,17 +6,34 @@ const sendNotification = async (
   body
 ) => {
   try {
-    await admin.messaging().send({
-      token,
-      notification: {
-        title,
-        body,
-      },
-    });
+    const response =
+      await admin.messaging().send({
+        token,
 
-    console.log("Notification Sent");
+        notification: {
+          title,
+          body,
+        },
+
+        webpush: {
+          notification: {
+            title,
+            body,
+            requireInteraction: true,
+          },
+        },
+      });
+
+    console.log(
+      "Notification Sent:",
+      response
+    );
+
   } catch (error) {
-    console.log(error);
+    console.log(
+      "FCM ERROR:",
+      error
+    );
   }
 };
 
