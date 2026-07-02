@@ -80,15 +80,3 @@ Backend:
 https://ironhouse-backend.onrender.com
 
 ---
-
-## 📷 Screenshots
-
-> Add screenshots of:
-- Home Page
-- Membership Page
-- Dashboard
-- Admin Panel
-- AI Chat
-- Push Notification
-
----
